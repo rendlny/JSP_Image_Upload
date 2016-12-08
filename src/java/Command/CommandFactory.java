@@ -13,7 +13,7 @@ public class CommandFactory {
 
     public Command createCommand(String action) {
         Command command = null;
-        if (action.equals("upload_image")) {
+        if(action.equals("upload_image")) {
             command = new ImageUploadCommand();
         }
         return command;

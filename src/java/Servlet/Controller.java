@@ -38,7 +38,10 @@ public class Controller extends HttpServlet {
         session.setAttribute("error", null);
         String forwardToJsp = null;
         String action = request.getParameter("action");
-
+        if(action == null){
+            session.setAttribute("error", "ERROR - No action set, contact administrator");
+            forwardToJsp = "index.jsp";
+        }
         CommandFactory factory = new CommandFactory();
         Command command = factory.createCommand(action);
         if (command == null) {
@@ -50,6 +53,7 @@ public class Controller extends HttpServlet {
 
         response.sendRedirect(forwardToJsp);
     }
+
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -59,7 +63,6 @@ public class Controller extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-             
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
