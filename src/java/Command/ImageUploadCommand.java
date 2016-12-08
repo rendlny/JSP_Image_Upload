@@ -28,45 +28,51 @@ public class ImageUploadCommand implements Command {
         HttpSession session = request.getSession();
         String forwardToJsp = null;
         String img_name = request.getParameter("imageName");
-
-        InputStream inputStream = null;
-        Part filePart = null;
+         if(img_name!=null){
         try {
-            filePart = request.getPart("uploadImage");
-        } catch (IOException ex) {
-            session.setAttribute("error", "IOException");
-            forwardToJsp = "index.jsp";
-        } catch (ServletException e) {
-            session.setAttribute("error", "ServletException");
-            forwardToJsp = "index.jsp";
-        }
-        if (filePart != null) {
-            // prints out some information for debugging
-            System.out.println(filePart.getName());
-            System.out.println(filePart.getSize());
-            System.out.println(filePart.getContentType());
+            InputStream inputStream = null;
 
-            try {
-                // obtains input stream of the upload file
-                inputStream = filePart.getInputStream();
-            } catch (IOException ex) {
-                Logger.getLogger(ImageUploadCommand.class.getName()).log(Level.SEVERE, null, ex);
+            // obtains the upload file part in this multipart request
+            Part filePart = request.getPart("uploadImage");
+           
+            if (filePart != null) {
+                // prints out some information for debugging
+                System.out.println(filePart.getName());
+                System.out.println(filePart.getSize());
+                System.out.println(filePart.getContentType());
+
+                try {
+                    // obtains input stream of the upload file
+                    inputStream = filePart.getInputStream();
+                } catch (IOException ex) {
+                    Logger.getLogger(ImageUploadCommand.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else {
+                session.setAttribute("error", "You must upload an image");
+                forwardToJsp = "index.jsp";
             }
 
             ImageDao imageDao = new ImageDao("jsp_image_upload");
             Image img = new Image(img_name, inputStream);
-            boolean added = imageDao.addImage(img);
+            boolean added = imageDao.addImage(img_name, inputStream);
+            
             if (added == true) {
-
+                session.setAttribute("error", "Image successfully uploaded to DB");
+                forwardToJsp = "uploaded.jsp";
             } else {
-                session.setAttribute("error", "Failed to upload image to DB");
+                session.setAttribute("error", "Failed to upload image to DB, "
+                        + "image name: " + img_name + ", inputStream: " + inputStream);
                 forwardToJsp = "index.jsp";
             }
-        } else {
-            session.setAttribute("error", "You must upload an image");
-            forwardToJsp = "index.jsp";
+        } catch (IOException ex) {
+            Logger.getLogger(ImageUploadCommand.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ServletException ex) {
+            Logger.getLogger(ImageUploadCommand.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+         }else{
+             session.setAttribute("error", "Enter Image name");
+                forwardToJsp = "index.jsp";
+         }
         return forwardToJsp;
     }
 

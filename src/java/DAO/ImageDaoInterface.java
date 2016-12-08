@@ -6,6 +6,7 @@
 package DAO;
 
 import DTO.Image;
+import java.io.InputStream;
 
 /**
  *
@@ -13,5 +14,6 @@ import DTO.Image;
  */
 public interface ImageDaoInterface {
     public boolean addImage(Image img);
+    public boolean addImage(String img_name, InputStream stream);
     public Image getImage(String img_name);
 }

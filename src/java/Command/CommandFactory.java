@@ -15,8 +15,6 @@ public class CommandFactory {
         Command command = null;
         if (action == null) {
             command = new ImageUploadCommand();
-        } else if (action.equals("upload_image")) {
-            command = new ImageUploadCommand();
         }
         return command;
 
