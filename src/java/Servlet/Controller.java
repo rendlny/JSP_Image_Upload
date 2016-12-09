@@ -11,6 +11,7 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpSession;
  * @author Ren
  */
 @WebServlet(name = "Controller", urlPatterns = {"/Controller"})
+@MultipartConfig(maxFileSize = 16177215)    // upload file's size up to 16MB
 public class Controller extends HttpServlet {
 
     /**
